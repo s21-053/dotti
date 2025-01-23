@@ -68,17 +68,25 @@
 
                     // モデルで予測
                     const prediction = await model.predict(inputTensor);
-                    const result = prediction[0].className;
+
+                    // 予測結果の形式を確認（デバッグ用）
+                    console.log(prediction);
+
+                    // 予測結果からクラスラベルを取得
+                    const predictionArray = prediction.dataSync();
+                    const predictedClass = predictionArray.indexOf(Math.max(...predictionArray)); // 最大値のインデックスを取得
 
                     // 結果を表示
-                    document.getElementById('result').textContent = result === "kabosu" ? "カボスです！" : "ゆずです！";
-                    
-                    // 結果に基づいてページ遷移
-                    if (result === "kabosu") {
-                        window.location.href = "kabosu.html";
+                    let resultText = '';
+                    if (predictedClass === 0) {
+                        resultText = "カボスです！";
+                        window.location.href = "kabosu.html"; // カボスの場合
                     } else {
-                        window.location.href = "yuzu.html";
+                        resultText = "ゆずです！";
+                        window.location.href = "yuzu.html"; // ゆずの場合
                     }
+
+                    document.getElementById('result').textContent = resultText;
                 } else {
                     console.error('モデルが読み込まれていません');
                 }
