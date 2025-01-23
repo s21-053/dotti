@@ -79,11 +79,11 @@
                     // 結果を表示
                     let resultText = '';
                     if (predictedClass === 0) {
-                        resultText = "カボスです！";
-                        window.location.href = "kabosu.html"; // カボスの場合
-                    } else {
                         resultText = "ゆずです！";
                         window.location.href = "yuzu.html"; // ゆずの場合
+                    } else {
+                        resultText = "カボスです！";
+                        window.location.href = "kabosu.html"; // カボスの場合
                     }
 
                     document.getElementById('result').textContent = resultText;
