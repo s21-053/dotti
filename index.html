@@ -37,7 +37,6 @@
     <div class="result" id="result"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
     <script>
         let model;
 
@@ -55,7 +54,20 @@
             imgElement.src = URL.createObjectURL(image);
             imgElement.onload = async () => {
                 if (model) {
-                    const prediction = await model.predict(imgElement);
+                    // 画像をTensor形式に変換
+                    const tensor = tf.browser.fromPixels(imgElement);
+
+                    // モデルの入力に合わせてサイズを調整（224x224にリサイズ）
+                    const resizedTensor = tf.image.resizeBilinear(tensor, [224, 224]);
+
+                    // 正規化処理（ピクセル値を0〜1にする）
+                    const normalizedTensor = resizedTensor.div(tf.scalar(255));
+
+                    // バッチ次元を追加
+                    const inputTensor = normalizedTensor.expandDims(0);
+
+                    // モデルで予測
+                    const prediction = await model.predict(inputTensor);
                     const result = prediction[0].className;
 
                     // 結果を表示
