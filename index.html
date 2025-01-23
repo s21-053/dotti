@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カボスとゆずの識別アプリ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>カボスとゆずの識別アプリ</h1>
+    
+    <div class="container">
+        <h3>画像をアップロードしてください</h3>
+        <input type="file" id="imageUpload" accept="image/*">
+        <button class="button" onclick="classifyImage()">画像を判定</button>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+    <script>
+        let model;
+
+        // モデルをロードする関数
+        async function loadModel() {
+            model = await tf.loadLayersModel('/models/model.json');
+        }
+
+        loadModel();  // ページ読み込み時にモデルをロード
+
+        // 画像を判定する関数
+        async function classifyImage() {
+            const image = document.getElementById('imageUpload').files[0];
+            const imgElement = document.createElement('img');
+            imgElement.src = URL.createObjectURL(image);
+            imgElement.onload = async () => {
+                if (model) {
+                    const prediction = await model.predict(imgElement);
+                    const result = prediction[0].className;
+
+                    // 結果を表示
+                    document.getElementById('result').textContent = result === "kabosu" ? "カボスです！" : "ゆずです！";
+                    
+                    // 結果に基づいてページ遷移
+                    if (result === "kabosu") {
+                        window.location.href = "kabosu.html";
+                    } else {
+                        window.location.href = "yuzu.html";
+                    }
+                } else {
+                    console.error('モデルが読み込まれていません');
+                }
+            };
+        }
+    </script>
+</body>
+</html>
