@@ -49,15 +49,18 @@
     </style>
 </head>
 <body>
-    <h1>カボスとゆずの識別アプリ</h1>
-    
-    <div class="container">
-        <h3>画像をアップロードしてください</h3>
-        <input type="file" id="imageUpload" accept="image/*">
+    <header>
+        <h1>果物判別アプリ</h1>
+    </header>
+    <main>
+        <h2>画像をアップロードして果物を判別しよう</h2>
+        <input type="file" id="imageUpload">
+        <p id="result"></p>
         <button class="button" onclick="classifyImage()">画像を判定</button>
-    </div>
-
-    <div class="result" id="result"></div>
+    </main>
+    <footer>
+        <p>&copy; 2025 果物判別アプリ</p>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script>
